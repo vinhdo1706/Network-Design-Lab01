@@ -1,0 +1,6 @@
+﻿Endpoint A,Port A,Endpoint B,Port B,Cable,Status
+R1-ISP,Serial0/0/0,R2-Central,Serial0/0/0,Serial DCE (R1 DCE; confirm in PT),PLAN — NOT CONNECTED
+R1-ISP,FastEthernet0/0,Eagle Server,FastEthernet0,Copper Cross-Over or Auto,PLAN — NOT CONNECTED
+R2-Central,FastEthernet0/0,S1-Central,FastEthernet0/24,Copper Straight-Through,PLAN — NOT CONNECTED
+S1-Central,FastEthernet0/1,hostPod1A,FastEthernet0,Copper Straight-Through,PLAN — NOT CONNECTED
+S1-Central,FastEthernet0/2,hostPod1B,FastEthernet0,Copper Straight-Through,PLAN — NOT CONNECTED

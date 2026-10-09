@@ -1,0 +1,9 @@
+﻿Device,Interface,IPv4,Subnet Mask,Default Gateway,Note
+R1-ISP,FastEthernet0/0,192.168.254.253,255.255.255.0,—,LAN Eagle
+R1-ISP,Serial0/0/0,10.10.10.6,255.255.255.252,—,DCE to R2
+R2-Central,FastEthernet0/0,172.16.255.254,255.255.0.0,—,LAN Pod
+R2-Central,Serial0/0/0,10.10.10.5,255.255.255.252,—,DTE to R1
+S1-Central,Fa0/24,—,—,—,Switch port to R2; no management IP
+hostPod1A,FastEthernet0,172.16.1.1,255.255.0.0,172.16.255.254,PC; Pod 1
+hostPod1B,FastEthernet0,172.16.1.2,255.255.0.0,172.16.255.254,PC; Pod 1
+Eagle Server,FastEthernet0,192.168.254.254,255.255.255.0,192.168.254.253,PC representative
