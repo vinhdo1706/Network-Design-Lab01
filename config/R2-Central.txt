@@ -1,0 +1,13 @@
+enable
+configure terminal
+hostname R2-Central
+interface fastethernet0/0
+ ip address 172.16.255.254 255.255.0.0
+ no shutdown
+exit
+interface serial0/0/0
+ ip address 10.10.10.5 255.255.255.252
+ no shutdown
+exit
+ip route 192.168.254.0 255.255.255.0 10.10.10.6
+end

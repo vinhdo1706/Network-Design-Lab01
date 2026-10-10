@@ -1,0 +1,14 @@
+enable
+configure terminal
+hostname R1-ISP
+interface fastethernet0/0
+ ip address 192.168.254.253 255.255.255.0
+ no shutdown
+exit
+interface serial0/0/0
+ ip address 10.10.10.6 255.255.255.252
+ clock rate 2000000
+ no shutdown
+exit
+ip route 172.16.0.0 255.255.0.0 10.10.10.5
+end
