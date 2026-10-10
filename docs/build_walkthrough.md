@@ -1,43 +1,74 @@
-# Build và Configure — Thao tác trong Cisco Packet Tracer 9.0.1
+# Triển khai mô hình mạng trên Cisco Packet Tracer
 
-## 1. Tạo bản `.pkt` thực tế
-- File → New; đặt hai **2811** (R1-ISP và R2-Central), mỗi router lắp **WIC-2T vào Slot 0** khi đã tắt nguồn, bật lại.
-- Đặt một switch **2960-24TT** tên **S1-Central** và ba PC-PT: **hostPod1A**, **hostPod1B**, **Eagle Server**.
-- Bật **Always Show Port Labels** trong Options → Preferences nếu có.
-- Đặt thiết bị theo topology Cisco trang 1 (R1 nối trực tiếp Eagle; R1 nối serial R2; R2 nối S1; hai host nối S1).
-- File → Save As vào `Network Design\Labs\NDLab01\20110112_DoThanhVinh_ND-Lab01.pkt`.
-- Không dùng R0–R3 của Instruction. File `.pkt` chỉ có giá trị kiểm chứng sau khi được mở và chạy trên máy của bạn.
+## 1. Thiết bị và bố cục
 
-## 2. Kết nối cáp (đã lập kế hoạch, chưa có Actual)
-1. Connections → **Serial DCE**, bấm **R1-ISP trước** và chọn Serial0/0/0, sau đó R2-Central → Serial0/0/0. Kiểm tra đầu DCE thực tế bằng CLI (`show controllers serial 0/0/0`) hoặc dấu nhận diện của Packet Tracer. Nếu DCE nằm ở R2, phải chỉnh lại cáp trước khi dán cấu hình.
-2. R1-ISP Fa0/0 → Eagle Server FastEthernet0: Copper Cross-Over hoặc Auto.
-3. R2-Central Fa0/0 → S1-Central Fa0/24: Copper Straight-Through.
-4. S1-Central Fa0/1 → hostPod1A Fa0: Copper Straight-Through.
-5. S1-Central Fa0/2 → hostPod1B Fa0: Copper Straight-Through.
-6. Chụp topology với nhãn port khi đã nối và đặt tên đủ (E01).
+Mô hình được xây dựng bằng Cisco Packet Tracer 9.0.1 với hai router **Cisco 2811**, một switch **2960-24TT** và ba thiết bị **PC-PT**. Hai router được đặt tên `R1-ISP`, `R2-Central`, có mô-đun `WIC-2T` tại Slot 0 để sử dụng cổng Serial. Switch mang tên `S1-Central`; ba PC có tên `hostPod1A`, `hostPod1B` và `Eagle Server`.
 
-## 3. Cấu hình router
-- Mở R1-ISP → CLI. Nếu có `Would you like to enter...` trả lời `no`; vào `Router>`.
-- Dán **từng khối lệnh phù hợp** từ `config/R1-ISP.txt` (dòng bắt đầu `!` là chú thích, có thể bỏ qua); xác minh `clock rate` chỉ trên DCE.
-- Lặp lại trên R2 với `config/R2-Central.txt`, **không** chạy `clock rate` trên DTE.
-- Đảm bảo interface đã có IP và `no shutdown`. Khi trạng thái chưa up/up, kiểm tra cáp, trạng thái đầu bên kia và Serial DCE.
+Bố cục chính: `hostPod1A` và `hostPod1B` nối tới `S1-Central`; switch nối với `R2-Central`; `R2-Central` nối Serial tới `R1-ISP`; `R1-ISP` nối Ethernet trực tiếp tới `Eagle Server`. Tên thiết bị và tên cổng được hiển thị trong Logical Workspace để thuận tiện đối chiếu.
 
-## 4. Cấu hình 3 PC
-Desktop → IP Configuration → Static. Nhập theo `data/addressing_table.csv`:
-- hostPod1A: 172.16.1.1 / 255.255.0.0 / GW 172.16.255.254.
-- hostPod1B: 172.16.1.2 / 255.255.0.0 / GW 172.16.255.254.
-- Eagle Server (PC): 192.168.254.254 / 255.255.255.0 / GW 192.168.254.253.
-- S1-Central không cần cấu hình IP quản trị (quyết định D04); giữ chuyển mạch mặc định.
+Tệp mô phỏng: `20110112_DoThanhVinh_ND-Lab01.pkt`.
 
-## 5. Xác minh cấu hình và lưu lại
-- R1, R2: `show ip interface brief`, `show ip route`, `show running-config`.
-- Nếu route có vấn đề, kiểm tra R2 có static đến `192.168.254.0/24` và R1 có static đến `172.16.0.0/16`.
-- Khi cấu hình đã đúng: `copy running-config startup-config` và chọn lưu file `.pkt` (`Ctrl+S`).
-- Nếu ping đầu tiên timeout do ARP, thử lại và quan sát Simulation; không tự khẳng định Pass khi chưa thấy kết quả.
+## 2. Kết nối vật lý
 
-## 6. Git đúng tiến trình
-- Sau khi giải nén pack trong `Network Design` kiểm tra README, config và docs là nội dung thực tế; `git init` tại `Labs/NDLab01` nếu chưa có repo.
-- Commit 1 (plan): các file kế hoạch và cấu hình bản đầu (chưa nhận là đã triển khai).
-- Commit 2 (configure): sau khi `.pkt` được tạo và có cấu hình đã xác minh.
-- Commit 3 (verify/report): sau khi có evidence, Test Matrix Actual và PDF report thực tế.
-- Remote GitHub phải kiểm tra repo hiện tồn tại hay chưa; không push nhầm repo của môn khác.
+| Kết nối | Cổng đầu A | Cổng đầu B | Loại cáp |
+|---|---|---|---|
+| R1-ISP — R2-Central | S0/0/0 | S0/0/0 | Serial DCE, đầu DCE tại R1-ISP |
+| R1-ISP — Eagle Server | Fa0/0 | Fa0 | Copper Cross-Over |
+| R2-Central — S1-Central | Fa0/0 | Fa0/24 | Copper Straight-Through |
+| S1-Central — hostPod1A | Fa0/1 | Fa0 | Copper Straight-Through |
+| S1-Central — hostPod1B | Fa0/2 | Fa0 | Copper Straight-Through |
+
+Cổng Serial sử dụng là `Serial0/0/0` trên cả hai router. Đầu DCE cung cấp xung nhịp; cổng DTE nhận xung nhịp từ phía đối diện. Đầu DCE/DTE được nhận diện bằng thông tin cáp hoặc lệnh `show controllers serial 0/0/0` khi IOS hỗ trợ.
+
+## 3. Cấu hình hai router
+
+Các script cấu hình tương ứng nằm trong `config/R1-ISP.txt` và `config/R2-Central.txt`. Sau khi đặt hostname, cấu hình IPv4 trên cổng Ethernet và Serial, các cổng sử dụng được kích hoạt bằng `no shutdown`.
+
+**R1-ISP**
+
+- `FastEthernet0/0`: `192.168.254.253 255.255.255.0`.
+- `Serial0/0/0`: `10.10.10.6 255.255.255.252`.
+- `clock rate 2000000` trên cổng Serial DCE.
+- Tuyến tĩnh về LAN trung tâm:
+
+```text
+ip route 172.16.0.0 255.255.0.0 10.10.10.5
+```
+
+**R2-Central**
+
+- `FastEthernet0/0`: `172.16.255.254 255.255.0.0`.
+- `Serial0/0/0`: `10.10.10.5 255.255.255.252`.
+- Tuyến tĩnh tới mạng Eagle Server:
+
+```text
+ip route 192.168.254.0 255.255.255.0 10.10.10.6
+```
+
+Cổng Serial DTE trên R2-Central không cần cấu hình `clock rate`. Hai tuyến tĩnh bảo đảm đường chuyển tiếp và đường phản hồi giữa các mạng không kết nối trực tiếp. Việc nhập lệnh và cấu hình thực tế được xác minh bằng `show running-config`, `show ip interface brief` và `show ip route`.
+
+## 4. Địa chỉ IPv4 của các PC
+
+Tại **Desktop → IP Configuration**, cả ba PC dùng cấu hình **Static**.
+
+| Thiết bị | IPv4 | Subnet mask | Default gateway |
+|---|---|---|---|
+| hostPod1A | `172.16.1.1` | `255.255.0.0` | `172.16.255.254` |
+| hostPod1B | `172.16.1.2` | `255.255.0.0` | `172.16.255.254` |
+| Eagle Server | `192.168.254.254` | `255.255.255.0` | `192.168.254.253` |
+
+`S1-Central` hoạt động với chức năng chuyển mạch Ethernet cơ bản, không sử dụng địa chỉ IP quản trị trong mô hình này.
+
+## 5. Kiểm chứng và lưu cấu hình
+
+Cấu hình router được kiểm tra bằng các lệnh:
+
+```text
+show ip interface brief
+show ip route
+show running-config
+```
+
+Hai cổng Ethernet đang dùng và cặp Serial WAN đã được kiểm tra ở trạng thái `up/up`. Bảng định tuyến chứa các mạng kết nối trực tiếp và tuyến tĩnh tới mạng ở phía router còn lại. Kết quả liên lạc giữa các thiết bị được tổng hợp trong `data/test_matrix.csv` và `docs/verification_and_simulation.md`.
+
+Để lưu cấu hình router từ RAM vào NVRAM, sử dụng `copy running-config startup-config`. Lệnh này cần được xác minh riêng nếu muốn khẳng định cấu hình khởi động đã được ghi; `show running-config` chỉ phản ánh cấu hình đang chạy. Mô hình Packet Tracer được lưu vào tệp `.pkt`. Đối với phép ping đầu tiên tới Eagle Server, một gói không nhận phản hồi, nhưng lần thử tiếp theo đạt 4/4. Kết quả này được ghi nhận mà không quy nguyên nhân khi chưa đủ bằng chứng.
