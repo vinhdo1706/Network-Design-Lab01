@@ -1,0 +1,8 @@
+﻿"Test","Device","Command","Expected","Actual","Pass/Fail","Evidence file","Notes"
+"T1","hostPod1A","ipconfig","IP 172.16.1.1/16; gateway 172.16.255.254","IPv4 172.16.1.1; mask 255.255.0.0; gateway 172.16.255.254","PASS","",""
+"T2","hostPod1A","ping 172.16.255.254","Reachable if LAN, router interface and links are correct","Ping successful: 4/4 replies; 0% loss","PASS","",""
+"T3","hostPod1A","ping 10.10.10.6","Reachable if WAN plus return route are correct","Ping successful: 4/4 replies; 0% loss","PASS","",""
+"T4","hostPod1A","ping 192.168.254.254","Reachable end-to-end with forward and return route","First run: 3/4 replies; repeat: 4/4 replies","PASS","","Initial run lost 1/4 packets; repeat succeeded 4/4. Cause not confirmed."
+"T5","hostPod1A","tracert 192.168.254.254","Expected R2, R1, destination; details depend on device responses","Trace complete: 172.16.255.254 -> 10.10.10.6 -> 192.168.254.254","PASS","",""
+"T6","hostPod1A","ping 172.16.1.2","Reachable on same LAN after ARP","Ping successful: 4/4 replies; 0% loss","PASS","",""
+"T7","R1-ISP and R2-Central","show ip route","Connected networks and appropriate static routes","R1 static route via 10.10.10.5; R2 static route via 10.10.10.6","PASS","",""
